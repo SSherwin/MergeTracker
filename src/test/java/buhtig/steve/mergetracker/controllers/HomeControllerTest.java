@@ -1,4 +1,4 @@
-package buhtig.steve.mergetracker.steve.mergetracker.controllers;
+package buhtig.steve.mergetracker.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
