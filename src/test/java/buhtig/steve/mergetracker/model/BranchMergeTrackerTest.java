@@ -11,6 +11,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class BranchMergeTrackerTest {
 
@@ -52,12 +53,21 @@ public class BranchMergeTrackerTest {
     }
 
     @Test
-    public void testGetTitle() throws Exception {
+         public void testGetTitle() throws Exception {
         expect(mergeFrom.getBranchName()).andReturn("A");
         expect(branch.getBranchName()).andReturn("B");
         replay(mergeFrom);
         replay(branch);
         assertThat("Title derived", tracker.getTitle(), equalTo("A --> B") );
+        verify(mergeFrom);
+        verify(branch);
+    }
+
+    @Test
+    public void testGetId() throws Exception {
+        replay(mergeFrom);
+        replay(branch);
+        assertThat("Id set", tracker.getId(), notNullValue());
         verify(mergeFrom);
         verify(branch);
     }

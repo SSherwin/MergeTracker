@@ -11,6 +11,9 @@ import java.util.TreeMap;
  */
 public class BranchMergeTracker {
 
+    private static long idCounter = 0;
+
+    private final long id;
     private final Branch branch;
     private final Branch mergeFrom;
     private TreeMap<Long, Revision> revisionsToMerge;
@@ -22,6 +25,7 @@ public class BranchMergeTracker {
      * @param mergeFrom location where getting revisions from
      */
     public BranchMergeTracker(Branch branch, Branch mergeFrom) {
+        this.id = idCounter++;
         this.branch = branch;
         this.mergeFrom = mergeFrom;
         revisionsToMerge = new TreeMap<>();
@@ -47,8 +51,12 @@ public class BranchMergeTracker {
         revisionsToMerge.put(revision.getRevision(), revision);
     }
 
-
     public String getTitle() {
         return mergeFrom.getBranchName() + " --> "  + branch.getBranchName();
     }
+
+    public long getId() {
+        return id;
+    }
+
 }
