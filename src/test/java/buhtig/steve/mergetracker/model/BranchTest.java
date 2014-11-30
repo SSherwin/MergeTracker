@@ -10,10 +10,10 @@ import static org.hamcrest.Matchers.*;
 
 public class BranchTest {
 
-    final Revision revision123 = new Revision(123L, "Steve", "Msg123", new Date());
-    final Revision revision1 = new Revision(1L, "Steve", "Msg1", new Date());
-    final Revision revision12 = new Revision(12L, "Steve", "Msg12", new Date());
-    final Revision revision500 = new Revision(500L, "Steve", "Msg500", new Date());
+    private final Revision revision123 = new Revision(123L, "Steve", "Msg123", new Date());
+    private final Revision revision1 = new Revision(1L, "Steve", "Msg1", new Date());
+    private final Revision revision12 = new Revision(12L, "Steve", "Msg12", new Date());
+    private final Revision revision500 = new Revision(500L, "Steve", "Msg500", new Date());
     private Branch branch;
 
     @Before

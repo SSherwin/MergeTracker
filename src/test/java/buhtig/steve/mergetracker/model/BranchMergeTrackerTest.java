@@ -1,6 +1,5 @@
 package buhtig.steve.mergetracker.model;
 
-import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.hamcrest.Matchers;
 import org.junit.Before;

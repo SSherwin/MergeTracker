@@ -1,6 +1,5 @@
 package buhtig.steve.mergetracker.services;
 
-import buhtig.steve.mergetracker.model.Branch;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
 import buhtig.steve.mergetracker.reportdata.ReportByRevision;
@@ -8,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,7 +39,9 @@ public class MergerTrackerReportServices {
 
     @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{reportId}/byrevision")
     public ReportByRevision reportByRevision(@PathVariable Long reportId) {
-        return new ReportByRevision(reports.get(reportId));
+        final BranchMergeTracker branchMergeTracker = reports.get(reportId);
+        provider.refresh(branchMergeTracker);
+        return new ReportByRevision(branchMergeTracker);
     }
 
 }

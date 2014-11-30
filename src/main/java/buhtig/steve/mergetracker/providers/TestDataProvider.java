@@ -4,8 +4,6 @@ import buhtig.steve.mergetracker.model.Branch;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.Revision;
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

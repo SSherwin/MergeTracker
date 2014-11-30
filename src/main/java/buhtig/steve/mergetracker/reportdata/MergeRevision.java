@@ -2,8 +2,6 @@ package buhtig.steve.mergetracker.reportdata;
 
 import buhtig.steve.mergetracker.model.Revision;
 
-import java.util.Date;
-
 /**
  * Created by Steve on 30/11/2014.
  */
