@@ -19,7 +19,7 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
 
 
     @Override
-    public TreeMap<String, BranchMergeTracker> loadData() {
+    public TreeMap<Long, BranchMergeTracker> loadData() {
         final Branch release1 = new Branch("branches/RELEASE-1.0.0");
         final Branch release2 = new Branch("branches/RELEASE-2.0.0");
         final Branch trunk = new Branch("trunk");
@@ -67,7 +67,7 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
             trunk.addRevision(revision);
         }
 
-        for(long rev =601; rev <= 80; rev++) {
+        for(long rev =61; rev <= 80; rev++) {
             Revision revision = new Revision(rev, "Bob", "Messages 6", new Date());
             if (rev%2 == 0) {
                 trunk.addRevision(revision);
@@ -81,12 +81,13 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
 
         merge1.addRevision(22L);
         merge1.addRevision(23L);
+        merge1.addRevision(25L);
 
-        TreeMap<String, BranchMergeTracker> result = new TreeMap<>();
-        result.put(merge1.getTitle(), merge1);
-        result.put(merge2.getTitle(), merge2);
-        result.put(merge3.getTitle(), merge3);
-        result.put(merge4.getTitle(), merge4);
+        TreeMap<Long, BranchMergeTracker> result = new TreeMap<>();
+        result.put(1L, merge1);
+        result.put(2L, merge2);
+        result.put(3L, merge3);
+        result.put(4L, merge4);
 
 
         return result;

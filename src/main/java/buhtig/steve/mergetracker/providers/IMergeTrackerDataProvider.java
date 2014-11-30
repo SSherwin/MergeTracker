@@ -13,7 +13,7 @@ public interface IMergeTrackerDataProvider {
      *
      * @return map of merge reports
      */
-    TreeMap<String, BranchMergeTracker> loadData();
+    TreeMap<Long, BranchMergeTracker> loadData();
 
     /**
      *
