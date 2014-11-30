@@ -5,7 +5,7 @@ import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import java.util.TreeMap;
 
 /**
- * Interface defining methpds the providpr of data will implement
+ * Interface defining methods the provider of data will implement
  * Created by Steve on 30/11/2014.
  */
 public interface IMergeTrackerDataProvider {

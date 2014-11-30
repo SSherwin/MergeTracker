@@ -18,7 +18,7 @@ public class Revision {
      * @param revision revision number
      * @param author author
      * @param message commit message
-     * @param commitDate date commited
+     * @param commitDate date committed
      */
     public Revision(long revision, String author, String message, Date commitDate) {
         this.revision = revision;

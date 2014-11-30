@@ -35,7 +35,7 @@ public class Branch {
     /**
      * @return earliest revision
      */
-    public Revision getEarlistRevision() {
+    public Revision getEarliestRevision() {
         final Map.Entry<Long, Revision> firstEntry = revisions.firstEntry();
         if (null == firstEntry) {
             return null;
@@ -71,7 +71,7 @@ public class Branch {
 
     /**
      * @param revision to get
-     * @return revison object for given id.
+     * @return revision object for given id.
      */
     public Revision getRevision(long revision) {
         return revisions.get(revision);

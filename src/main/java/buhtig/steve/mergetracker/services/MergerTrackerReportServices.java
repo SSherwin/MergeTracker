@@ -23,7 +23,7 @@ public class MergerTrackerReportServices {
     IMergeTrackerDataProvider provider;
 
     @Autowired
-    MergerTrackerReportServices(final IMergeTrackerDataProvider provider) {
+    public MergerTrackerReportServices(final IMergeTrackerDataProvider provider) {
         this.provider = provider;
         reports = provider.loadData();
     }

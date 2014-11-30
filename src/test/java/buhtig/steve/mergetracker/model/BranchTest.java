@@ -33,14 +33,14 @@ public class BranchTest {
     }
 
     @Test
-    public void testGetEarlistRevision() throws Exception {
+    public void testGetEarliestRevision() throws Exception {
         addRevisions();
-        assertThat("1 should be the earliest", branch.getEarlistRevision(), equalTo(revision1));
+        assertThat("1 should be the earliest", branch.getEarliestRevision(), equalTo(revision1));
     }
 
     @Test
-    public void testGetEarlistRevisionNull() throws Exception {
-        assertThat("1 should be the earliest", branch.getEarlistRevision(), nullValue());
+    public void testGetEarliestRevisionNull() throws Exception {
+        assertThat("1 should be the earliest", branch.getEarliestRevision(), nullValue());
     }
 
     @Test
@@ -70,12 +70,12 @@ public class BranchTest {
     @Test
     public void getRevisionReturningAnswer() {
         addRevisions();
-        assertThat("we can get revison 12", branch.getRevision(12L), equalTo(revision12));
+        assertThat("we can get revision 12", branch.getRevision(12L), equalTo(revision12));
     }
 
     @Test
     public void getRevisionReturningNull() {
-        assertThat("we can get revison 21", branch.getRevision(21L), nullValue());
+        assertThat("we can get revision 21", branch.getRevision(21L), nullValue());
     }
 
     private void addRevisions() {

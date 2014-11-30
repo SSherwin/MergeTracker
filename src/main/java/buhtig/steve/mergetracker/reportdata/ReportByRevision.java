@@ -21,22 +21,22 @@ public class ReportByRevision {
         mergeRevisions = new ArrayList<>();
 
         // Get the revisions to merge
-        final List<Revision> revisonsToMerge = tracker.getRevisionsToMerge();
+        final List<Revision> revisionsToMerge = tracker.getRevisionsToMerge();
 
         // if we have revisions to report
-        if (null != revisonsToMerge && revisonsToMerge.size() > 0) {
+        if (null != revisionsToMerge && revisionsToMerge.size() > 0) {
             /* The report is to report all revision between the first unmerged
              * revision and the last unmerged revision.
              */
-            final Long firstRevision = revisonsToMerge.get(0).getRevision();
-            final Long lastRevision = revisonsToMerge.get(revisonsToMerge.size() - 1).getRevision();
+            final Long firstRevision = revisionsToMerge.get(0).getRevision();
+            final Long lastRevision = revisionsToMerge.get(revisionsToMerge.size() - 1).getRevision();
 
             // From the list of all revisions pull out those between the first and last.
             final List<Revision> revisionsInRange = tracker.getMergeFrom().getRevisions();
             for (Revision revToReport : revisionsInRange) {
                 if (firstRevision <= revToReport.getRevision() && lastRevision >= revToReport.getRevision()) {
                     mergeRevisions.add(new MergeRevision(revToReport,
-                            revisonsToMerge.contains(revToReport)));
+                            revisionsToMerge.contains(revToReport)));
                 }
             }
         }
