@@ -12,6 +12,7 @@ public class Revision {
     private final String author;
     private final String message;
     private final Date commitDate;
+    private  Long bugTrackId;
 
     /**
      *
@@ -44,4 +45,12 @@ public class Revision {
         return commitDate;
     }
 
+
+    public Long getBugTrackId() {
+        return bugTrackId;
+    }
+
+    public void setBugTrackId(Long bugTrackId) {
+        this.bugTrackId = bugTrackId;
+    }
 }
