@@ -19,17 +19,6 @@ public class RevisionTest {
         rev = new Revision(123L,"Steve", "Test message without issue", dateForTest);
     }
 
-    @Test
-    public void testIsEligibleForMergeDefaulsToFalse() throws Exception {
-        assertThat("Default is false", rev.isEligibleForMerge(), equalTo(false));
-    }
-
-
-    @Test
-    public void testIsEligibleForMergeCanBeSetTrue() throws Exception {
-        rev.setMerge(true);
-        assertThat("can be reset to true", rev.isEligibleForMerge(), equalTo(true));
-    }
 
     @Test
     public void testRevisionCreated() throws Exception {

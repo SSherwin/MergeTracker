@@ -12,8 +12,6 @@ public class Revision {
     private final String author;
     private final String message;
     private final Date commitDate;
-    private boolean eligibleForMerge = false; // Assume it is merged.
-
 
     /**
      *
@@ -29,21 +27,6 @@ public class Revision {
         this.commitDate = commitDate;
     }
 
-    /**
-     *
-     * @return true if revision has been merged
-     */
-    public boolean isEligibleForMerge() {
-        return eligibleForMerge;
-    }
-
-    /**
-     *
-     * @param eligibleForMerge merge status.
-     */
-    public void setMerge(boolean eligibleForMerge) {
-        this.eligibleForMerge = eligibleForMerge;
-    }
 
     public long getRevision() {
         return revision;
