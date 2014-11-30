@@ -5,6 +5,8 @@ import buhtig.steve.mergetracker.model.Revision;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -12,19 +14,18 @@ import java.util.List;
  * between the first unmerged revision and the last unmerged revision.
  * Created by Steve on 30/11/2014.
  */
-public class ReportByRevision extends AbstractReport {
+public class ReportByBugId extends AbstractReport {
 
-    private List<MergeRevision> mergeRevisions;
-
-    public ReportByRevision(final BranchMergeTracker tracker) {
+    private Map<Long, List<MergeRevision>> dataMap;
+    public ReportByBugId(final BranchMergeTracker tracker) {
         super(tracker);
-
 
     }
 
     @Override
     protected void createReport(BranchMergeTracker tracker) {
-        this.mergeRevisions =  new ArrayList<>();
+        dataMap = new TreeMap<>();
+
         // Get the revisions to merge
         final List<Revision> revisionsToMerge = tracker.getRevisionsToMerge();
 
@@ -40,7 +41,12 @@ public class ReportByRevision extends AbstractReport {
             final List<Revision> revisionsInRange = tracker.getMergeFrom().getRevisions();
             for (Revision revToReport : revisionsInRange) {
                 if (firstRevision <= revToReport.getRevision() && lastRevision >= revToReport.getRevision()) {
-                    mergeRevisions.add(new MergeRevision(revToReport,
+                    List<MergeRevision> bugRevList = dataMap.get(revToReport.getBugTrackId());
+                    if (null == bugRevList) {
+                        bugRevList = new ArrayList<>();
+                        dataMap.put(revToReport.getBugTrackId(), bugRevList);
+                    }
+                    bugRevList.add(new MergeRevision(revToReport,
                             revisionsToMerge.contains(revToReport)));
                 }
             }
@@ -48,8 +54,8 @@ public class ReportByRevision extends AbstractReport {
     }
 
 
-    public List<MergeRevision> getMergeRevisions() {
-        return mergeRevisions;
+    public Map<Long, List<MergeRevision>> getDataMap() {
+        return dataMap;
     }
 
 }
