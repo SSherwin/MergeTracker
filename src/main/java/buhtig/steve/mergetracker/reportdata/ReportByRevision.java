@@ -12,13 +12,16 @@ import java.util.List;
  * between the first unmerged revision and the last unmerged revision.
  * Created by Steve on 30/11/2014.
  */
-public class ReportByRevision {
-    private final String title;
-    private final List<MergeRevision> mergeRevisions;
+public class ReportByRevision extends AbstractReport {
 
-    public ReportByRevision(BranchMergeTracker tracker) {
-        title = tracker.getTitle();
-        mergeRevisions = new ArrayList<>();
+    public ReportByRevision(final BranchMergeTracker tracker) {
+        super(tracker);
+
+    }
+
+    @Override
+    protected List<MergeRevision> createRevisionList(BranchMergeTracker tracker) {
+        final List<MergeRevision> revisions = new ArrayList<>();
 
         // Get the revisions to merge
         final List<Revision> revisionsToMerge = tracker.getRevisionsToMerge();
@@ -35,19 +38,13 @@ public class ReportByRevision {
             final List<Revision> revisionsInRange = tracker.getMergeFrom().getRevisions();
             for (Revision revToReport : revisionsInRange) {
                 if (firstRevision <= revToReport.getRevision() && lastRevision >= revToReport.getRevision()) {
-                    mergeRevisions.add(new MergeRevision(revToReport,
+                    revisions.add(new MergeRevision(revToReport,
                             revisionsToMerge.contains(revToReport)));
                 }
             }
         }
+        return revisions;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public List<MergeRevision> getMergeRevisions() {
-        return mergeRevisions;
-    }
 
 }
