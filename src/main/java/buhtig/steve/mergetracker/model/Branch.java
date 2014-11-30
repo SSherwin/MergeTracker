@@ -3,6 +3,7 @@ package buhtig.steve.mergetracker.model;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -34,15 +35,24 @@ public class Branch {
     /**
      * @return earliest revision
      */
-    public long getEarlistRevision() {
-        return revisions.firstEntry().getValue().getRevision();
+    public Revision getEarlistRevision() {
+        final Map.Entry<Long, Revision> firstEntry = revisions.firstEntry();
+        if (null == firstEntry) {
+            return null;
+        }
+        return firstEntry.getValue();
     }
 
     /**
      * @return last revision
      */
-    public long getLastRevision() {
-        return revisions.lastEntry().getValue().getRevision();
+    public Revision getLastRevision() {
+
+        final Map.Entry<Long, Revision> lastEntry = revisions.lastEntry();
+        if (null == lastEntry) {
+            return null;
+        }
+        return lastEntry.getValue();
     }
 
     /**
@@ -57,5 +67,13 @@ public class Branch {
      */
     public String getBranchName() {
         return branchName;
+    }
+
+    /**
+     * @param revision to get
+     * @return revison object for given id.
+     */
+    public Revision getRevision(long revision) {
+        return revisions.get(revision);
     }
 }
