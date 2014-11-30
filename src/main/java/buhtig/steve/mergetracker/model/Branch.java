@@ -22,14 +22,14 @@ public class Branch {
      */
     public Branch(String branchName) {
         this.branchName = branchName;
-        revisions = new TreeMap<Long, Revision>();
+        revisions = new TreeMap<>();
     }
 
     /**
      * @return list of revisions on this branch.
      */
     public List<Revision> getRevisions() {
-        return new ArrayList<Revision>(this.revisions.values());
+        return new ArrayList<>(this.revisions.values());
     }
 
     /**
