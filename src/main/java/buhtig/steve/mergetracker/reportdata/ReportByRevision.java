@@ -8,6 +8,8 @@ import java.util.List;
 
 
 /**
+ * The by Revision report creates a report that shows all merged and unmerged revisions
+ * between the first unmerged revision and the last unmerged revision.
  * Created by Steve on 30/11/2014.
  */
 public class ReportByRevision {

@@ -3,6 +3,7 @@ package buhtig.steve.mergetracker.reportdata;
 import buhtig.steve.mergetracker.model.Revision;
 
 /**
+ * MergeRevision reports on the merge status of a revision
  * Created by Steve on 30/11/2014.
  */
 public class MergeRevision extends Revision {

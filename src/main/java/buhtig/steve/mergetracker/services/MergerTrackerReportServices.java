@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
+ * Service to provide the data in REST format of various merge tracking reports.
  * Created by Steve on 30/11/2014.
  */
 @Configurable
