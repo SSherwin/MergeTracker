@@ -10,6 +10,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class BranchMergeTrackerTest {
 
@@ -50,4 +51,14 @@ public class BranchMergeTrackerTest {
         verify(mergeFrom);
     }
 
+    @Test
+    public void testGetTitle() throws Exception {
+        expect(mergeFrom.getBranchName()).andReturn("A");
+        expect(branch.getBranchName()).andReturn("B");
+        replay(mergeFrom);
+        replay(branch);
+        assertThat("Title derived", tracker.getTitle(), equalTo("A --> B") );
+        verify(mergeFrom);
+        verify(branch);
+    }
 }

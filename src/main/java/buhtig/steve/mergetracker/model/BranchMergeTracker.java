@@ -48,5 +48,7 @@ public class BranchMergeTracker {
     }
 
 
-
+    public String getTitle() {
+        return mergeFrom.getBranchName() + " --> "  + branch.getBranchName();
+    }
 }
