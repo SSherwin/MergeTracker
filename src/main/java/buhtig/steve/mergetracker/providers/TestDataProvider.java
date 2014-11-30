@@ -16,6 +16,7 @@ import java.util.TreeMap;
 @Component
 public class TestDataProvider implements IMergeTrackerDataProvider {
 
+    private long bugTrackNumber = 12345L;
 
     @Override
     public TreeMap<Long, BranchMergeTracker> loadData() {
@@ -23,6 +24,7 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
         final Branch release2 = new Branch("branches/RELEASE-2.0.0");
         final Branch trunk = new Branch("trunk");
         final Branch feature = new Branch("branches/FEATURE1");
+
 
         BranchMergeTracker merge1 = new BranchMergeTracker(release2, release1);
         BranchMergeTracker merge2 = new BranchMergeTracker(feature, trunk);
@@ -33,41 +35,49 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
         //Add 20 revisions to trunk
         for(long rev =1; rev <= 20; rev++) {
             Revision revision = new Revision(rev, "Steve", "Messages 1", new Date());
+            addBugNumber(revision);
             trunk.addRevision(revision);
         }
 
         for(long rev =21; rev <= 25; rev++) {
             Revision revision = new Revision(rev, "Steve", "Messages 2", new Date());
+            addBugNumber(revision);
             release1.addRevision(revision);
         }
 
         for(long rev =26; rev <= 30; rev++) {
             Revision revision = new Revision(rev, "Steve", "Messages 3", new Date());
+            addBugNumber(revision);
             trunk.addRevision(revision);
         }
 
         for(long rev =31; rev <= 35; rev++) {
             Revision revision = new Revision(rev, "Steve", "Messages 4", new Date());
+            addBugNumber(revision);
             release1.addRevision(revision);
         }
 
         for(long rev =36; rev <= 40; rev++) {
             Revision revision = new Revision(rev, "Bob", "Messages 5", new Date());
+            addBugNumber(revision);
             trunk.addRevision(revision);
         }
 
         for(long rev =41; rev <= 45; rev++) {
             Revision revision = new Revision(rev, "Bob", "Messages 6", new Date());
+            addBugNumber(revision);
             release2.addRevision(revision);
         }
 
         for(long rev =46; rev <= 60; rev++) {
             Revision revision = new Revision(rev, "Bob", "Messages 6", new Date());
+            addBugNumber(revision);
             trunk.addRevision(revision);
         }
 
         for(long rev =61; rev <= 80; rev++) {
             Revision revision = new Revision(rev, "Bob", "Messages 6", new Date());
+            addBugNumber(revision);
             if (rev%2 == 0) {
                 trunk.addRevision(revision);
                 merge2.addRevision(rev);
@@ -96,5 +106,14 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
     public void refresh(BranchMergeTracker branchMergeTracker) {
 
     }
+
+
+    private void addBugNumber(Revision revision) {
+        if (revision.getRevision() % 5 == 0) {
+            bugTrackNumber++;
+        }
+        revision.setBugTrackId(bugTrackNumber);
+    }
+
 }
 

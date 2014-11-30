@@ -19,6 +19,7 @@ public class MergeRevision extends Revision {
                 revision.getMessage(),
                 revision.getCommitDate());
         this.eligibleForMerge = eligibleForMerge;
+        setBugTrackId(revision.getBugTrackId());
     }
 
     /**
