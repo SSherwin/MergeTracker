@@ -1,5 +1,7 @@
 package buhtig.steve.mergetracker.providers;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Parser to extract a issue number from the revision message.
  * This implementation is to use the last line that starts "issue #" to be the
@@ -7,6 +9,7 @@ package buhtig.steve.mergetracker.providers;
  *
  * Created by Steve on 02/12/2014.
  */
+@Component
 public class MessageParser implements IMessageParser{
 
     @Override

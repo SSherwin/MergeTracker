@@ -5,6 +5,7 @@ import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.Revision;
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
 import groovy.lang.Singleton;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
@@ -26,6 +27,8 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
     @Value("${revisiondata.url}")
     private String url;
 
+    @Autowired
+    private IMessageParser parser;
 
     @Override
     public TreeMap<Long, BranchMergeTracker> loadData() {
@@ -117,12 +120,8 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
 
     }
 
-
     private void addBugNumber(Revision revision) {
-        if (revision.getRevision() % 5 == 0) {
-            bugTrackNumber++;
-        }
-        revision.setBugTrackId(bugTrackNumber);
+        revision.setBugTrackId(parser.getBugIdFromMessage(revision.getMessage()));
     }
 
 }
