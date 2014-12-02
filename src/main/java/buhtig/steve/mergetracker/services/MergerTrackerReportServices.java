@@ -2,12 +2,14 @@ package buhtig.steve.mergetracker.services;
 
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
+import buhtig.steve.mergetracker.providers.MergeTrackerDataProviderFactory;
 import buhtig.steve.mergetracker.reportdata.ReportByBugId;
 import buhtig.steve.mergetracker.reportdata.ReportByRevision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -21,14 +23,17 @@ public class MergerTrackerReportServices {
 
     TreeMap<Long, BranchMergeTracker> reports;
 
-    IMergeTrackerDataProvider provider;
+    MergeTrackerDataProviderFactory factory;
 
     @Autowired
-    public MergerTrackerReportServices(final IMergeTrackerDataProvider provider) {
-        this.provider = provider;
-        reports = provider.loadData();
+    public MergerTrackerReportServices(final MergeTrackerDataProviderFactory factory) {
+        this.factory = factory;
     }
 
+    @PostConstruct
+    public void initialise() {
+        reports = factory.getProvider().loadData();
+    }
 
     @RequestMapping(method = RequestMethod.GET, value ="/mergereport/list")
     public Map<Long, String> list() {
@@ -42,14 +47,14 @@ public class MergerTrackerReportServices {
     @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{reportId}/byrevision")
     public ReportByRevision reportByRevision(@PathVariable Long reportId) {
         final BranchMergeTracker branchMergeTracker = reports.get(reportId);
-        provider.refresh(branchMergeTracker);
+        factory.getProvider().refresh(branchMergeTracker);
         return new ReportByRevision(branchMergeTracker);
     }
 
     @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{reportId}/bybugid")
     public ReportByBugId reportByBugId(@PathVariable Long reportId) {
         final BranchMergeTracker branchMergeTracker = reports.get(reportId);
-        provider.refresh(branchMergeTracker);
+        factory.getProvider().refresh(branchMergeTracker);
         return new ReportByBugId(branchMergeTracker);
     }
 

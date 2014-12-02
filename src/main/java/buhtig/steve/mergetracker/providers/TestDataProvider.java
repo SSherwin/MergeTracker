@@ -4,6 +4,10 @@ import buhtig.steve.mergetracker.model.Branch;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.Revision;
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
+import groovy.lang.Singleton;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -13,13 +17,19 @@ import java.util.TreeMap;
  * This provides some test data for early development
  * Created by Steve on 30/11/2014.
  */
+@Singleton
 @Component
 public class TestDataProvider implements IMergeTrackerDataProvider {
 
     private long bugTrackNumber = 12345L;
 
+    @Value("${revisiondata.url}")
+    private String url;
+
+
     @Override
     public TreeMap<Long, BranchMergeTracker> loadData() {
+        System.out.println("\n\n\nRevision Data URL = " + url);
         final Branch release1 = new Branch("branches/RELEASE-1.0.0");
         final Branch release2 = new Branch("branches/RELEASE-2.0.0");
         final Branch trunk = new Branch("trunk");
