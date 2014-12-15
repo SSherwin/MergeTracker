@@ -59,4 +59,8 @@ public class BranchMergeTracker {
         return id;
     }
 
+    public void clearRevisionsToMerge() {
+        this.revisionsToMerge.clear();
+    }
+
 }
