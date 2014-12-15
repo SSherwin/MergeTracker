@@ -96,4 +96,22 @@ public class MessageParserTest {
         final String msg = "issue #0000000";
         assertThat("issue in message newline at end", parser.getBugIdFromMessage(msg), equalTo(0L));
     }
+
+    @Test
+    public void testGetBugIdFromMsgWithDot() throws Exception {
+        final String msg = "issue #12345.";
+        assertThat("issue in message newline at end", parser.getBugIdFromMessage(msg), equalTo(ISSUE_12345));
+    }
+
+    @Test
+    public void testGetBugIdFromMsgWithComma() throws Exception {
+        final String msg = "issue #12345,";
+        assertThat("issue in message newline at end", parser.getBugIdFromMessage(msg), equalTo(ISSUE_12345));
+    }
+
+    @Test
+    public void testGetBugIdFromMsgWithCommaDelim() throws Exception {
+        final String msg = "issue #12345,000000,55555,7777";
+        assertThat("issue in message newline at end", parser.getBugIdFromMessage(msg), equalTo(ISSUE_12345));
+    }
 }
