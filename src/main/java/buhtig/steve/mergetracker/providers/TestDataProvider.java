@@ -11,15 +11,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * This provides some test data for early development
  * Created by Steve on 30/11/2014.
  */
-@Singleton
-@Component
 public class TestDataProvider implements IMergeTrackerDataProvider {
 
     private long bugTrackNumber = 12345L;
@@ -30,13 +31,22 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
     @Autowired
     private IMessageParser parser;
 
-    @Override
-    public TreeMap<Long, BranchMergeTracker> loadData() {
-        System.out.println("\n\n\nRevision Data URL = " + url);
+    private TreeMap<Long, BranchMergeTracker> mergeData;
+    private TreeMap<String, Branch> branchData;
+
+    @PostConstruct
+    public void loadData() {
+        branchData = new TreeMap<>();
+
         final Branch release1 = new Branch("branches/RELEASE-1.0.0");
         final Branch release2 = new Branch("branches/RELEASE-2.0.0");
         final Branch trunk = new Branch("trunk");
         final Branch feature = new Branch("branches/FEATURE1");
+
+        branchData.put("RELEASE-1.0.0", release1);
+        branchData.put("RELEASE-2.0.0", release2);
+        branchData.put("trunk", trunk);
+        branchData.put("FEATURE1", feature);
 
 
         BranchMergeTracker merge1 = new BranchMergeTracker(release2, release1);
@@ -112,12 +122,22 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
         result.put(4L, merge4);
 
 
-        return result;
+        mergeData = result;
     }
 
     @Override
     public void refresh(BranchMergeTracker branchMergeTracker) {
 
+    }
+
+    @Override
+    public TreeMap<Long, BranchMergeTracker> getMergeData() {
+        return mergeData;
+    }
+
+    @Override
+    public TreeMap<String, Branch> getBranchData() {
+        return branchData;
     }
 
     private void addBugNumber(Revision revision) {

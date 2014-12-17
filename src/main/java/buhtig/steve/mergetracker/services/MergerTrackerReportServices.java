@@ -32,7 +32,7 @@ public class MergerTrackerReportServices {
 
     @PostConstruct
     public void initialise() {
-        reports = factory.getProvider().loadData();
+        reports = factory.getProvider().getMergeData();
     }
 
     @RequestMapping(method = RequestMethod.GET, value ="/mergereport/list")

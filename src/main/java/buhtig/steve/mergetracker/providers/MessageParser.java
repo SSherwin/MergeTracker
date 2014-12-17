@@ -19,7 +19,6 @@ public class MessageParser implements IMessageParser{
         for (int idx = lines.length-1; idx >= 0; idx--) {
             if (lines[idx].toLowerCase().startsWith("issue #")) {
                 final String issueString = lines[idx].substring(7).split("[.,\\s]+(?!\\w+])")[0];
-                System.out.println("issueString = >" + issueString + "<");
                 issue = Long.parseLong(issueString);
                 break;
             }
