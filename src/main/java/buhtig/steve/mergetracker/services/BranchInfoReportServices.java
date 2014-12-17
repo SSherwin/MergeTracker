@@ -25,7 +25,7 @@ import java.util.TreeMap;
 @RestController( )
 public class BranchInfoReportServices {
 
-    TreeMap<Long, BranchMergeTracker> reports;
+    Map<String, Branch> reports;
 
     MergeTrackerDataProviderFactory factory;
 
@@ -36,29 +36,23 @@ public class BranchInfoReportServices {
 
     @PostConstruct
     public void initialise() {
-        reports = factory.getProvider().getData();
+        reports = factory.getProvider().getBranchData();
     }
 
     @RequestMapping(method = RequestMethod.GET, value ="/info/list")
     public Map<Long, String> list() {
         Map<Long, String> result = new TreeMap<>();
-        for(BranchMergeTracker tracker : reports.values()) {
-            result.put(tracker.getId()+1, tracker.getBranch().getBranchName());
+        Long id = 0L;
+        for(Branch branch : reports.values()) {
+            result.put(++id, branch.getBranchName());
         }
         return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value ="/info/{branchName}")
     public List<Revision> infoByBranch (@PathVariable String branchName) {
-        Branch branch = null;
-        for(BranchMergeTracker tracker : reports.values()) {
-            if (tracker.getBranch().getBranchName().contains(branchName)) {
-                branch = tracker.getBranch();
-                factory.getProvider().refresh(tracker);
-                break;
-            }
-        }
-        if (branch == null) {
+        Branch branch = reports.get(branchName);
+        if (null == branch) {
             return new ArrayList<>();
         }
         return branch.getRevisions();

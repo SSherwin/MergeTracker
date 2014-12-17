@@ -29,10 +29,10 @@ public class BranchInfoReportServicesTest  {
         IMergeTrackerDataProvider mockProvider = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
 
         expect(mergeTrackerDataProviderFactory.getProvider()).andReturn(mockProvider).anyTimes();
-        final TreeMap<Long, BranchMergeTracker> testData = new TreeMap<>();
+        final TreeMap<String, Branch> testData = new TreeMap<>();
 
 
-        expect(mockProvider.getData()).andReturn(testData);
+        expect(mockProvider.getBranchData()).andReturn(testData);
 
         replay(mockProvider);
         replay(mergeTrackerDataProviderFactory);
@@ -52,42 +52,34 @@ public class BranchInfoReportServicesTest  {
         IMergeTrackerDataProvider mockProvider = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
 
         expect(mergeTrackerDataProviderFactory.getProvider()).andReturn(mockProvider).anyTimes();
-        final TreeMap<Long, BranchMergeTracker>testData = new TreeMap<>();
+        final TreeMap<String, Branch>testData = new TreeMap<>();
+
+        expect(mockProvider.getBranchData()).andReturn(testData).anyTimes();
 
 
-        expect(mockProvider.getData()).andReturn(testData);
-
-        replay(mockProvider);
-        replay(mergeTrackerDataProviderFactory);
-        
         // Add Test data
-        BranchMergeTracker mock1 = EasyMock.createMock("mock1", BranchMergeTracker.class);
-        BranchMergeTracker mock2 = EasyMock.createMock("mock2", BranchMergeTracker.class);
-        BranchMergeTracker mock3 = EasyMock.createMock("mock3", BranchMergeTracker.class);
-        expect(mock1.getId()).andReturn(0L);
-        expect(mock2.getId()).andReturn(1L);
-        expect(mock3.getId()).andReturn(2L);
+
         Branch mockBranch1 =  EasyMock.createMock("mockBranch1", Branch.class);
         Branch mockBranch2 =  EasyMock.createMock("mockBranch2", Branch.class);
         Branch mockBranch3 =  EasyMock.createMock("mockBranch3", Branch.class);
-        expect(mock1.getBranch()).andReturn(mockBranch1);
-        expect(mock2.getBranch()).andReturn(mockBranch2);
-        expect(mock3.getBranch()).andReturn(mockBranch3);
+
         expect(mockBranch1.getBranchName()).andReturn("mockBranch1");
         expect(mockBranch2.getBranchName()).andReturn("mockBranch2");
         expect(mockBranch3.getBranchName()).andReturn("mockBranch3");
 
+        List<Revision> revList = new ArrayList<>();
+        expect(mockBranch3.getRevisions()).andReturn(revList);
 
-        replay(mock1);
-        replay(mock2);
-        replay(mock3);
         replay(mockBranch1);
         replay(mockBranch2);
         replay(mockBranch3);
 
-        testData.put(0L, mock1);
-        testData.put(1L, mock2);
-        testData.put(2L, mock3);
+        replay(mockProvider);
+        replay(mergeTrackerDataProviderFactory);
+
+        testData.put("mockBranch1", mockBranch1);
+        testData.put("mockBranch2", mockBranch2);
+        testData.put("mockBranch3", mockBranch3);
 
         service.initialise();
 
@@ -97,9 +89,6 @@ public class BranchInfoReportServicesTest  {
         assertThat("list has mock 2 branch", list.get(2L), equalTo("mockBranch2"));
         assertThat("list has mock 3 branch", list.get(3L), equalTo("mockBranch3"));
 
-        verify(mock1);
-        verify(mock2);
-        verify(mock3);
 
     }
 
@@ -111,10 +100,10 @@ public class BranchInfoReportServicesTest  {
         IMergeTrackerDataProvider mockProvider = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
 
         expect(mergeTrackerDataProviderFactory.getProvider()).andReturn(mockProvider).anyTimes();
-        final TreeMap<Long, BranchMergeTracker>testData = new TreeMap<>();
+        final TreeMap<String, Branch>testData = new TreeMap<>();
 
 
-        expect(mockProvider.getData()).andReturn(testData);
+        expect(mockProvider.getBranchData()).andReturn(testData);
 
         replay(mockProvider);
         replay(mergeTrackerDataProviderFactory);
@@ -132,35 +121,24 @@ public class BranchInfoReportServicesTest  {
         IMergeTrackerDataProvider mockProvider = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
 
         expect(mergeTrackerDataProviderFactory.getProvider()).andReturn(mockProvider).anyTimes();
-        final TreeMap<Long, BranchMergeTracker>testData = new TreeMap<>();
+        final TreeMap<String, Branch>testData = new TreeMap<>();
+
+        expect(mockProvider.getBranchData()).andReturn(testData).anyTimes();
 
 
-        expect(mockProvider.getData()).andReturn(testData).anyTimes();
-
-        
         // Add Test data
-        BranchMergeTracker mock1 = EasyMock.createMock("mock1", BranchMergeTracker.class);
-        BranchMergeTracker mock2 = EasyMock.createMock("mock2", BranchMergeTracker.class);
-        BranchMergeTracker mock3 = EasyMock.createMock("mock3", BranchMergeTracker.class);
-        expect(mock1.getId()).andReturn(0L);
-        expect(mock2.getId()).andReturn(1L);
-        expect(mock3.getId()).andReturn(2L);
+
         Branch mockBranch1 =  EasyMock.createMock("mockBranch1", Branch.class);
         Branch mockBranch2 =  EasyMock.createMock("mockBranch2", Branch.class);
         Branch mockBranch3 =  EasyMock.createMock("mockBranch3", Branch.class);
-        expect(mock1.getBranch()).andReturn(mockBranch1).anyTimes();
-        expect(mock2.getBranch()).andReturn(mockBranch2).anyTimes();
-        expect(mock3.getBranch()).andReturn(mockBranch3).anyTimes();
+
         expect(mockBranch1.getBranchName()).andReturn("mockBranch1");
         expect(mockBranch2.getBranchName()).andReturn("mockBranch2");
         expect(mockBranch3.getBranchName()).andReturn("mockBranch3");
 
-        mockProvider.refresh(mock1); //EXPECT THIS
         List<Revision> revList = new ArrayList<>();
         expect(mockBranch1.getRevisions()).andReturn(revList);
-        replay(mock1);
-        replay(mock2);
-        replay(mock3);
+
         replay(mockBranch1);
         replay(mockBranch2);
         replay(mockBranch3);
@@ -168,9 +146,9 @@ public class BranchInfoReportServicesTest  {
         replay(mockProvider);
         replay(mergeTrackerDataProviderFactory);
 
-        testData.put(0L, mock1);
-        testData.put(1L, mock2);
-        testData.put(2L, mock3);
+        testData.put("mockBranch1", mockBranch1);
+        testData.put("mockBranch2", mockBranch2);
+        testData.put("mockBranch3", mockBranch3);
 
         service.initialise();
         final List<Revision> list = service.infoByBranch("mockBranch1");
@@ -185,35 +163,24 @@ public class BranchInfoReportServicesTest  {
         IMergeTrackerDataProvider mockProvider = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
 
         expect(mergeTrackerDataProviderFactory.getProvider()).andReturn(mockProvider).anyTimes();
-        final TreeMap<Long, BranchMergeTracker>testData = new TreeMap<>();
+        final TreeMap<String, Branch>testData = new TreeMap<>();
 
-
-        expect(mockProvider.getData()).andReturn(testData).anyTimes();
+        expect(mockProvider.getBranchData()).andReturn(testData).anyTimes();
 
 
         // Add Test data
-        BranchMergeTracker mock1 = EasyMock.createMock("mock1", BranchMergeTracker.class);
-        BranchMergeTracker mock2 = EasyMock.createMock("mock2", BranchMergeTracker.class);
-        BranchMergeTracker mock3 = EasyMock.createMock("mock3", BranchMergeTracker.class);
-        expect(mock1.getId()).andReturn(0L);
-        expect(mock2.getId()).andReturn(1L);
-        expect(mock3.getId()).andReturn(2L);
+
         Branch mockBranch1 =  EasyMock.createMock("mockBranch1", Branch.class);
         Branch mockBranch2 =  EasyMock.createMock("mockBranch2", Branch.class);
         Branch mockBranch3 =  EasyMock.createMock("mockBranch3", Branch.class);
-        expect(mock1.getBranch()).andReturn(mockBranch1).anyTimes();
-        expect(mock2.getBranch()).andReturn(mockBranch2).anyTimes();
-        expect(mock3.getBranch()).andReturn(mockBranch3).anyTimes();
+
         expect(mockBranch1.getBranchName()).andReturn("mockBranch1");
         expect(mockBranch2.getBranchName()).andReturn("mockBranch2");
         expect(mockBranch3.getBranchName()).andReturn("mockBranch3");
 
-        mockProvider.refresh(mock3); //EXPECT THIS
         List<Revision> revList = new ArrayList<>();
         expect(mockBranch3.getRevisions()).andReturn(revList);
-        replay(mock1);
-        replay(mock2);
-        replay(mock3);
+
         replay(mockBranch1);
         replay(mockBranch2);
         replay(mockBranch3);
@@ -221,9 +188,9 @@ public class BranchInfoReportServicesTest  {
         replay(mockProvider);
         replay(mergeTrackerDataProviderFactory);
 
-        testData.put(0L, mock1);
-        testData.put(1L, mock2);
-        testData.put(2L, mock3);
+        testData.put("mockBranch1", mockBranch1);
+        testData.put("mockBranch2", mockBranch2);
+        testData.put("mockBranch3", mockBranch3);
 
         service.initialise();
         final List<Revision> list = service.infoByBranch("mockBranch3");
@@ -238,35 +205,24 @@ public class BranchInfoReportServicesTest  {
         IMergeTrackerDataProvider mockProvider = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
 
         expect(mergeTrackerDataProviderFactory.getProvider()).andReturn(mockProvider).anyTimes();
-        final TreeMap<Long, BranchMergeTracker>testData = new TreeMap<>();
+        final TreeMap<String, Branch>testData = new TreeMap<>();
 
-
-        expect(mockProvider.getData()).andReturn(testData).anyTimes();
+        expect(mockProvider.getBranchData()).andReturn(testData).anyTimes();
 
 
         // Add Test data
-        BranchMergeTracker mock1 = EasyMock.createMock("mock1", BranchMergeTracker.class);
-        BranchMergeTracker mock2 = EasyMock.createMock("mock2", BranchMergeTracker.class);
-        BranchMergeTracker mock3 = EasyMock.createMock("mock3", BranchMergeTracker.class);
-        expect(mock1.getId()).andReturn(0L);
-        expect(mock2.getId()).andReturn(1L);
-        expect(mock3.getId()).andReturn(2L);
+
         Branch mockBranch1 =  EasyMock.createMock("mockBranch1", Branch.class);
         Branch mockBranch2 =  EasyMock.createMock("mockBranch2", Branch.class);
         Branch mockBranch3 =  EasyMock.createMock("mockBranch3", Branch.class);
-        expect(mock1.getBranch()).andReturn(mockBranch1).anyTimes();
-        expect(mock2.getBranch()).andReturn(mockBranch2).anyTimes();
-        expect(mock3.getBranch()).andReturn(mockBranch3).anyTimes();
+
         expect(mockBranch1.getBranchName()).andReturn("mockBranch1");
         expect(mockBranch2.getBranchName()).andReturn("mockBranch2");
         expect(mockBranch3.getBranchName()).andReturn("mockBranch3");
 
-        mockProvider.refresh(mock3); //EXPECT THIS
         List<Revision> revList = new ArrayList<>();
         expect(mockBranch3.getRevisions()).andReturn(revList);
-        replay(mock1);
-        replay(mock2);
-        replay(mock3);
+
         replay(mockBranch1);
         replay(mockBranch2);
         replay(mockBranch3);
@@ -274,9 +230,9 @@ public class BranchInfoReportServicesTest  {
         replay(mockProvider);
         replay(mergeTrackerDataProviderFactory);
 
-        testData.put(0L, mock1);
-        testData.put(1L, mock2);
-        testData.put(2L, mock3);
+        testData.put("mockBranch1", mockBranch1);
+        testData.put("mockBranch2", mockBranch2);
+        testData.put("mockBranch3", mockBranch3);
 
         service.initialise();
         final List<Revision> list = service.infoByBranch("branchNotInMap");
