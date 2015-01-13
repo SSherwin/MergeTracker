@@ -29,6 +29,10 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
     private String url;
 
     @Autowired
+    ApplicationConfigurationProvider configProv;
+
+
+    @Autowired
     private IMessageParser parser;
 
     private TreeMap<Long, BranchMergeTracker> mergeData;
@@ -127,7 +131,8 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
 
     @Override
     public void refresh(BranchMergeTracker branchMergeTracker) {
-
+        String value = (String)this.configProv.getConfigProperties("test1").getProperty("revisiondata.provider");
+        System.out.println("Value = " + value);
     }
 
     @Override
