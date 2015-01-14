@@ -12,10 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This provides some test data for early development
@@ -131,8 +128,12 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
 
     @Override
     public void refresh(BranchMergeTracker branchMergeTracker) {
-        String value = (String)this.configProv.getConfigProperties("test1").getProperty("revisiondata.provider");
+        String value = (String)this.configProv.getConfigProperties("Test1", "url");
         System.out.println("Value = " + value);
+
+
+        List<Object> values = (List)this.configProv.getConfigProperties("Test1", "merges.merge");
+        System.out.println("Values = " + values.size());
     }
 
     @Override
