@@ -128,12 +128,12 @@ public class TestDataProvider implements IMergeTrackerDataProvider {
 
     @Override
     public void refresh(BranchMergeTracker branchMergeTracker) {
-        String value = (String)this.configProv.getConfigProperties("Test1", "url");
-        System.out.println("Value = " + value);
+      //  String value = (String)this.configProv.getConfigProperties("Test1", "url");
+     //   System.out.println("Value = " + value);
 
 
-        List<Object> values = (List)this.configProv.getConfigProperties("Test1", "merges.merge");
-        System.out.println("Values = " + values.size());
+      //  List<Object> values = (List)this.configProv.getConfigProperties("Test1", "merges.merge");
+      //  System.out.println("Values = " + values.size());
     }
 
     @Override
