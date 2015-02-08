@@ -9,53 +9,49 @@ import buhtig.steve.mergetracker.providers.TestDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by steve on 03/02/15.
  */
+@Component
 public class MergeTrackerManager {
 
-    @Autowired
     private ApplicationConfigurationProvider configurationProvider;
+    private TreeMap<String, Repository> repositories;
 
-    private MergeTracker mergeTracker;
+    @Autowired
+    MergeTrackerManager(final ApplicationConfigurationProvider configurationProvider) {
+        this.configurationProvider = configurationProvider;
+        this.repositories = new TreeMap<>();
+    }
 
-
+    public Repository getRepository(final String name) {
+        return this.repositories.get(name);
+    }
 
     public void refresh() {
         List<String> apps = configurationProvider.getApplicationList();
         for (String  app : apps) {
-            if (mergeTracker.getRepository(app) == null) {
+            if (getRepository(app) == null) {
                 createRepository(app);
             }
         }
-
-
-        for (Repository repository : mergeTracker.getRepositories()) {
-            refreshRepository(repository);
-        }
     }
 
-    private void createRepository(String app) {
+    private void createRepository(final String app) {
         final Repository repository = new Repository();
         repository.setName(app);
-
-
-        repository.setDataProvider(getProvider(app));
-        this.mergeTracker.addRepository(repository);
-    }
-
-    private void refreshRepository(final Repository) {
-
-
+        repository.setProvider(getProvider(app));
+        this.repositories.put(repository.getName(), repository);
     }
 
     private IMergeTrackerDataProvider getProvider(final String app) {
-
-        IMergeTrackerDataProvider provider;
-
+        final IMergeTrackerDataProvider provider;
         switch (configurationProvider.getType(app)) {
             case "subversion":
                 provider = getSubversionProvider();
@@ -68,16 +64,17 @@ public class MergeTrackerManager {
 
     @Bean
     @Scope("prototype")
-    public IMergeTrackerDataProvider getTestDataProvider() {
+    private IMergeTrackerDataProvider getTestDataProvider() {
         return new TestDataProvider();
     }
 
     @Bean
     @Scope("prototype")
-    public IMergeTrackerDataProvider getSubversionProvider() {
+    private IMergeTrackerDataProvider getSubversionProvider() {
         return new SubversionProvider();
     }
 
-
-
+    public Collection<Repository> getRepositories() {
+        return this.repositories.values();
+    }
 }
