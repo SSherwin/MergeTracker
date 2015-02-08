@@ -12,6 +12,8 @@ import java.util.TreeMap;
  */
 public class Branch {
 
+    public static final String TRUNK = "trunk";
+
     private final String branchName;
     private TreeMap<Long, Revision> revisions;
 
@@ -75,5 +77,9 @@ public class Branch {
      */
     public Revision getRevision(long revision) {
         return revisions.get(revision);
+    }
+
+    public boolean isTrunk() {
+        return TRUNK.equalsIgnoreCase(branchName);
     }
 }
