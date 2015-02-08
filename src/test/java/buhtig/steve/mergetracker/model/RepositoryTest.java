@@ -38,13 +38,14 @@ public class RepositoryTest {
     @Test
     public void testGetMerges() throws Exception {
         final Branch branchFrom = new Branch("Test1");
-        final Branch branchTo = new Branch("Test1");
+        final Branch branchTo = new Branch("Test2");
+        final Branch branchTo2 = new Branch("Test3");
 
         assertThat(repository.getBranches(), hasSize(0));
         final BranchMergeTracker test1 = new BranchMergeTracker(branchFrom,branchTo);
         repository.addMerge(test1);
         assertThat(repository.getMerges(), contains(test1));
-        final BranchMergeTracker test2 = new BranchMergeTracker(branchFrom,branchTo);
+        final BranchMergeTracker test2 = new BranchMergeTracker(branchFrom,branchTo2);
         repository.addMerge(test2);
         assertThat(repository.getMerges(), contains(test1, test2));
         repository.removeMerge(test1);
@@ -77,5 +78,30 @@ public class RepositoryTest {
         IMergeTrackerDataProvider mockProv = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
         repository.setProvider(mockProv);
         assertSame(repository.getProvider(), mockProv);
+    }
+
+    @Test
+    public void testAddBranchDuplicate() throws Exception {
+        assertThat(repository.getBranches(), hasSize(0));
+        final Branch test1 = new Branch("Test1");
+        repository.addBranch(test1);
+        assertThat(repository.getBranches(), contains(test1));
+        repository.addBranch(test1);
+        assertThat(repository.getBranches(), contains(test1));
+    }
+
+    @Test
+    public void testAddMergeDuplicate() throws Exception {
+        final Branch branchFrom = new Branch("Test1");
+        final Branch branchTo = new Branch("Test1");
+
+        assertThat(repository.getBranches(), hasSize(0));
+        final BranchMergeTracker test1 = new BranchMergeTracker(branchFrom,branchTo);
+        repository.addMerge(test1);
+        assertThat(repository.getMerges(), contains(test1));
+        final BranchMergeTracker test2 = new BranchMergeTracker(branchFrom,branchTo);
+        repository.addMerge(test2);
+        assertThat(repository.getMerges(), contains(test1));
+
     }
 }

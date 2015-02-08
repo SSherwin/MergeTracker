@@ -59,6 +59,12 @@ public class Repository {
 
 
     public void addMerge(BranchMergeTracker merge) {
+        for(BranchMergeTracker tracker : this.getMerges()) {
+            if (tracker.getMergeFrom() == merge.getMergeFrom() &&
+                    tracker.getBranch() == merge.getBranch()) {
+                return;
+            }
+        }
         this.merges.put(merge.getId(), merge);
     }
 
@@ -71,5 +77,10 @@ public class Repository {
 
     public void setRevisions(List<Revision> revisions) {
         this.revisions = revisions;
+    }
+
+
+    public Branch getBranch(String branch) {
+        return this.branches.get(branch);
     }
 }
