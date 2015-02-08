@@ -2,6 +2,7 @@ package buhtig.steve.mergetracker.providers;
 
 import buhtig.steve.mergetracker.model.Branch;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
+import buhtig.steve.mergetracker.model.Repository;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -13,21 +14,8 @@ import java.util.TreeMap;
 public interface IMergeTrackerDataProvider {
 
     /**
-     *
-     * @return map of merge reports
+     * @param repository to refresh
      */
-    TreeMap<Long, BranchMergeTracker> getMergeData();
-
-    /**
-     *
-     * @return map of merge reports
-     */
-    TreeMap<String, Branch> getBranchData();
-
-    /**
-     *
-     * @param branchMergeTracker tracker to be refreshed
-     */
-    void refresh(final BranchMergeTracker branchMergeTracker);
+    void refresh(final Repository repository);
 }
 

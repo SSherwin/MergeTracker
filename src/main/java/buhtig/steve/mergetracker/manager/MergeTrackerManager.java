@@ -4,10 +4,7 @@ import buhtig.steve.mergetracker.model.Branch;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.MergeTracker;
 import buhtig.steve.mergetracker.model.Repository;
-import buhtig.steve.mergetracker.providers.ApplicationConfigurationProvider;
-import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
-import buhtig.steve.mergetracker.providers.SubversionProvider;
-import buhtig.steve.mergetracker.providers.TestDataProvider;
+import buhtig.steve.mergetracker.providers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -27,6 +24,11 @@ public class MergeTrackerManager {
 
     private ApplicationConfigurationProvider configurationProvider;
     private TreeMap<String, Repository> repositories;
+    private SubversionProvider svnProvider;
+
+
+    @Autowired
+    private IMessageParser parser;
 
     @Autowired
     MergeTrackerManager(final ApplicationConfigurationProvider configurationProvider) {
@@ -73,13 +75,18 @@ public class MergeTrackerManager {
             repository.addMerge(tracker);
             mergesToRemove.remove(tracker);
         }
+         getBranch(repository, "trunk");
 
         for(Branch remove : branchesToRemove) {
-            repository.removeBranch(remove);
+            if (!remove.isTrunk()) {
+                repository.removeBranch(remove);
+            }
         }
         for(BranchMergeTracker remove : mergesToRemove) {
             repository.removeMerge(remove);
         }
+
+        repository.getProvider().refresh(repository);
 
     }
 
@@ -115,7 +122,7 @@ public class MergeTrackerManager {
     @Bean
     @Scope("prototype")
     private IMergeTrackerDataProvider getTestDataProvider() {
-        return new TestDataProvider();
+        return new TestDataProvider(parser);
     }
 
     @Bean

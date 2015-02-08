@@ -41,7 +41,7 @@ public class MergeTrackerDataProviderFactory {
     @Bean
     @Scope("prototype")
     public IMergeTrackerDataProvider getTestDataProvider() {
-        return new TestDataProvider();
+        return new TestDataProvider(null);
     }
 
     @Bean

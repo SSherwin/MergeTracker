@@ -1,9 +1,12 @@
 package buhtig.steve.mergetracker.services;
 
+import buhtig.steve.mergetracker.manager.MergeTrackerManager;
 import buhtig.steve.mergetracker.model.Branch;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
+import buhtig.steve.mergetracker.model.Repository;
 import buhtig.steve.mergetracker.model.Revision;
 import buhtig.steve.mergetracker.providers.MergeTrackerDataProviderFactory;
+import buhtig.steve.mergetracker.reportdata.ReportByRevision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,33 +28,27 @@ import java.util.TreeMap;
 @RestController( )
 public class BranchInfoReportServices {
 
-    Map<String, Branch> reports;
-
-    MergeTrackerDataProviderFactory factory;
+    private MergeTrackerManager mergeTrackManager;
 
     @Autowired
-    public BranchInfoReportServices(final MergeTrackerDataProviderFactory factory) {
-        this.factory = factory;
+    public BranchInfoReportServices(final MergeTrackerManager mergeTrackManager) {
+        this.mergeTrackManager = mergeTrackManager;
     }
-
-    @PostConstruct
-    public void initialise() {
-        reports = factory.getProvider().getBranchData();
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value ="/info/list")
-    public Map<Long, String> list() {
+    @RequestMapping(method = RequestMethod.GET, value ="/info/{applicationName}/list")
+    public Map<Long, String> list(@PathVariable String applicationName) {
         Map<Long, String> result = new TreeMap<>();
+        final Repository repository = mergeTrackManager.getRepository(applicationName);
         Long id = 0L;
-        for(Branch branch : reports.values()) {
+        for(Branch branch : repository.getBranches()) {
             result.put(++id, branch.getBranchName());
         }
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value ="/info/{branchName}")
-    public List<Revision> infoByBranch (@PathVariable String branchName) {
-        Branch branch = reports.get(branchName);
+    @RequestMapping(method = RequestMethod.GET, value ="/info/{applicationName}/{branchName}")
+    public List<Revision> infoByBranch (@PathVariable String applicationName, @PathVariable String branchName) {
+        final Repository repository = mergeTrackManager.getRepository(applicationName);
+        Branch branch = repository.getBranch(branchName);
         if (null == branch) {
             return new ArrayList<>();
         }

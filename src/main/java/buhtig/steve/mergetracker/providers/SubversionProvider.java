@@ -2,11 +2,13 @@ package buhtig.steve.mergetracker.providers;
 
 import buhtig.steve.mergetracker.model.Branch;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
+import buhtig.steve.mergetracker.model.Repository;
 import buhtig.steve.mergetracker.model.Revision;
 import org.apache.log4j.Logger;
 import org.crsh.console.jline.internal.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,101 +28,39 @@ import java.util.*;
  *
  * Created by ssherwin on 01/12/2014.
  */
+@Component
 public class SubversionProvider implements IMergeTrackerDataProvider {
-
     private Logger log = Logger.getLogger(SubversionProvider.class);
 
     @Autowired
-    IMessageParser parser;
-
-    @Value("${revisiondata.url}")
-    private String url;
-
-    @Value("#{'${branches}'.split(',')}")
-    private List<String> branches;
-
-    @Value("#{'${merges}'.split(',')}")
-    private List<String> merges;
+    private IMessageParser parser;
 
     final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-    private long lowestRevision = 999999999;
-
-    private TreeMap<Long, BranchMergeTracker> mergeData;
-    private TreeMap<String, Branch> branchData;
-
-
-    @PostConstruct
-    private void loadData() {
-        branchData = new TreeMap<>();
-        for(String branchName : branches) {
-            final Branch branch = new Branch("branches/" + branchName);
-            getSvnInfoForBranch(branch);
-            branchData.put(branchName, branch);
+    @Override
+    public void refresh(Repository repository) {
+        for (Branch branch : repository.getBranches()) {
+            if (!"trunk".equals(branch.getBranchName())) {
+                getSvnInfoForBranch(branch, repository, false);
+            }
         }
-        // Trunk is always required.
-        final Branch trunk= new Branch("trunk");
-        branchData.put("trunk", trunk);
-        getSvnInfoForBranch(trunk, lowestRevision);
+        getSvnInfoForBranch(repository.getBranch("trunk"), repository, true);
 
-        //Load the merge information This should be separated by ->
-        mergeData = new TreeMap<>();
-        for(String mergesName : merges) {
-            String branchName = mergesName.split("->")[1];
-            String mergeFromName = mergesName.split("->")[0];
-            Branch branch = branchData.get(branchName);
-            Branch mergeFrom = branchData.get(mergeFromName);
-            BranchMergeTracker merge = new BranchMergeTracker(branch, mergeFrom);
-            getSvnInfoOutstandingMerges(merge);
-            mergeData.put(merge.getId(), merge);
+        for (BranchMergeTracker mergeTracker : repository.getMerges()) {
+            getSvnInfoOutstandingMerges(mergeTracker, repository.getUrl());
         }
-
-    }
-
-    /**
-     *
-     * @param branchMergeTracker tracker to be refreshed
-     */
-    @Override
-    public void refresh(BranchMergeTracker branchMergeTracker) {
-        getSvnInfoForBranch(branchMergeTracker.getBranch());
-        getSvnInfoOutstandingMerges(branchMergeTracker);
-    }
-
-    /**
-     *
-     * @return branch data.
-     */
-    @Override
-    public TreeMap<Long, BranchMergeTracker> getMergeData() {
-        return mergeData;
-    }
-
-    /**
-     *
-     * @return branch merge data.
-     */
-    @Override
-    public TreeMap<String, Branch>  getBranchData() {
-        return branchData;
     }
 
     /**
      *
      * @param branch to obtaind svn info for
+     * @param repository repository processing
+     * @param trunkBranch true if this is the trunk branch
      */
-    private void getSvnInfoForBranch(final Branch branch) {
-        getSvnInfoForBranch(branch, 1L);
-    }
-
-    /**
-     *
-     * @param branch to obtaind svn info for
-     * @param startRevison revision to start at.
-     */
-    private void getSvnInfoForBranch(final Branch branch, final Long startRevison) {
+    private void getSvnInfoForBranch(final Branch branch, final Repository repository, final boolean trunkBranch) {
+        final String url = repository.getUrl();
         try {
-            Long revStart = startRevison;
+            Long revStart = (trunkBranch ? 1L : repository.getLowestRevision() );
             if (null != branch.getLastRevision()) {
                 revStart = branch.getLastRevision().getRevision()+1;
             }
@@ -162,8 +102,8 @@ public class SubversionProvider implements IMergeTrackerDataProvider {
                 Revision svnRev = new Revision(rev, author, msg, date);
                 svnRev.setBugTrackId(bugId);
                 branch.addRevision(svnRev);
-                if (rev < lowestRevision) {
-                    lowestRevision = rev;
+                if (rev < repository.getLowestRevision()) {
+                    repository.setLowestRevision(rev);
                 }
             }
         } catch(Exception exp) {
@@ -189,7 +129,7 @@ public class SubversionProvider implements IMergeTrackerDataProvider {
      *
      * @param mergeTracker merge tracker info to get the list of outstanding merges for.
      */
-    private void getSvnInfoOutstandingMerges(final BranchMergeTracker mergeTracker) {
+    private void getSvnInfoOutstandingMerges(final BranchMergeTracker mergeTracker, final String url) {
         mergeTracker.clearRevisionsToMerge();
         try {
             // Run the SVN command....

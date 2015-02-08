@@ -16,6 +16,9 @@ public class Repository {
     private TreeMap<Long, BranchMergeTracker> merges;
     private List<Revision>revisions;
     private String name;
+    private long lowestRevision = Long.MAX_VALUE;
+
+    private String url;
 
     public Repository() {
         this.merges = new TreeMap<>();
@@ -82,5 +85,27 @@ public class Repository {
 
     public Branch getBranch(String branch) {
         return this.branches.get(branch);
+    }
+
+
+    public long getLowestRevision() {
+        return lowestRevision;
+    }
+
+    public void setLowestRevision(long lowestRevision) {
+        this.lowestRevision = lowestRevision;
+    }
+
+    public String getUrl() {
+        return this.url;
+    }
+
+    public void setUrl(final String url) {
+        this.url = url;
+    }
+
+
+    public BranchMergeTracker getMerge(Long reportId) {
+        return this.merges.get(reportId);
     }
 }

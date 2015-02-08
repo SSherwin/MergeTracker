@@ -1,6 +1,8 @@
 package buhtig.steve.mergetracker.services;
 
+import buhtig.steve.mergetracker.manager.MergeTrackerManager;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
+import buhtig.steve.mergetracker.model.Repository;
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
 import buhtig.steve.mergetracker.providers.MergeTrackerDataProviderFactory;
 import buhtig.steve.mergetracker.reportdata.ReportByBugId;
@@ -21,40 +23,39 @@ import java.util.TreeMap;
 @RestController( )
 public class MergerTrackerReportServices {
 
-    TreeMap<Long, BranchMergeTracker> reports;
-
-    MergeTrackerDataProviderFactory factory;
+    private MergeTrackerManager mergeTrackManager;
 
     @Autowired
-    public MergerTrackerReportServices(final MergeTrackerDataProviderFactory factory) {
-        this.factory = factory;
+    public MergerTrackerReportServices(final MergeTrackerManager mergeTrackManager) {
+        this.mergeTrackManager = mergeTrackManager;
     }
 
-    @PostConstruct
-    public void initialise() {
-        reports = factory.getProvider().getMergeData();
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value ="/mergereport/list")
-    public Map<Long, String> list() {
+    @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{applicationName}/list")
+    public Map<Long, String> list(@PathVariable String applicationName) {
         Map<Long, String> result = new TreeMap<>();
-        for(BranchMergeTracker tracker : reports.values()) {
-            result.put(tracker.getId(), tracker.getTitle());
+
+        final Repository repository = mergeTrackManager.getRepository(applicationName);
+        if (null != repository) {
+            for (BranchMergeTracker tracker : repository.getMerges()) {
+                result.put(tracker.getId(), tracker.getTitle());
+            }
         }
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{reportId}/byrevision")
-    public ReportByRevision reportByRevision(@PathVariable Long reportId) {
-        final BranchMergeTracker branchMergeTracker = reports.get(reportId);
-        factory.getProvider().refresh(branchMergeTracker);
+    @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{applicationName}/{reportId}/byrevision")
+    public ReportByRevision reportByRevision(@PathVariable String applicationName, @PathVariable Long reportId) {
+        final Repository repository = mergeTrackManager.getRepository(applicationName);
+        final BranchMergeTracker branchMergeTracker = repository.getMerge(reportId);
+        //factory.getProvider().refresh(branchMergeTracker);
         return new ReportByRevision(branchMergeTracker);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{reportId}/bybugid")
-    public ReportByBugId reportByBugId(@PathVariable Long reportId) {
-        final BranchMergeTracker branchMergeTracker = reports.get(reportId);
-        factory.getProvider().refresh(branchMergeTracker);
+    @RequestMapping(method = RequestMethod.GET, value ="/mergereport/{applicationName}/{reportId}/bybugid")
+    public ReportByBugId reportByBugId(@PathVariable String applicationName, @PathVariable Long reportId) {
+        final Repository repository = mergeTrackManager.getRepository(applicationName);
+        final BranchMergeTracker branchMergeTracker = repository.getMerge(reportId);
+        //factory.getProvider().refresh(branchMergeTracker);
         return new ReportByBugId(branchMergeTracker);
     }
 
