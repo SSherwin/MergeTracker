@@ -2,7 +2,9 @@ package buhtig.steve.mergetracker.model;
 
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Repository holds the model for a given aplpication.
@@ -10,10 +12,15 @@ import java.util.List;
  */
 public class Repository {
 
-    private List<Branch>branches;
-    private List<BranchMergeTracker> merges;
+    private TreeMap<String, Branch> branches;
+    private TreeMap<Long, BranchMergeTracker> merges;
     private List<Revision>revisions;
     private String name;
+
+    public Repository() {
+        this.merges = new TreeMap<>();
+        this.branches = new TreeMap<>();
+    }
 
     public IMergeTrackerDataProvider getProvider() {
         return provider;
@@ -33,22 +40,31 @@ public class Repository {
         this.name = name;
     }
 
-    public List<Branch> getBranches() {
-        return branches;
+    public Collection<Branch> getBranches() {
+        return branches.values();
     }
 
-    public void setBranches(List<Branch> branches) {
-        this.branches = branches;
+    public void addBranch(Branch branch) {
+        this.branches.put(branch.getBranchName(), branch);
     }
 
-    public List<BranchMergeTracker> getMerges() {
-        return merges;
+    public void removeBranch(Branch branch) {
+        this.branches.remove(branch.getBranchName());
     }
 
-    public void setMerges(List<BranchMergeTracker> merges) {
-        this.merges = merges;
+
+    public Collection<BranchMergeTracker> getMerges() {
+        return merges.values();
     }
 
+
+    public void addMerge(BranchMergeTracker merge) {
+        this.merges.put(merge.getId(), merge);
+    }
+
+    public void removeMerge(BranchMergeTracker merge) {
+        this.merges.remove(merge.getId());
+    }
     public List<Revision> getRevisions() {
         return revisions;
     }

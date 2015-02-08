@@ -8,8 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class RepositoryTest {
@@ -23,18 +22,33 @@ public class RepositoryTest {
 
     @Test
     public void testGetSetBranches() throws Exception {
-        assertThat(repository.getBranches(), nullValue());
-        List<Branch> testBranches = new ArrayList<>();
-        repository.setBranches(testBranches);
-        assertSame(repository.getBranches(), testBranches);
+        assertThat(repository.getBranches(), hasSize(0));
+        final Branch test1 = new Branch("Test1");
+        repository.addBranch(test1);
+        assertThat(repository.getBranches(), contains(test1));
+
+        final Branch test2 = new Branch("Test2");
+        repository.addBranch(test2);
+        assertThat(repository.getBranches(), contains(test1, test2));
+
+        repository.removeBranch(test1);
+        assertThat(repository.getBranches(), contains(test2));
     }
 
     @Test
     public void testGetMerges() throws Exception {
-        assertThat(repository.getMerges(), nullValue());
-        List<BranchMergeTracker> testMerges = new ArrayList<>();
-        repository.setMerges(testMerges);
-        assertSame(repository.getMerges(), testMerges);
+        final Branch branchFrom = new Branch("Test1");
+        final Branch branchTo = new Branch("Test1");
+
+        assertThat(repository.getBranches(), hasSize(0));
+        final BranchMergeTracker test1 = new BranchMergeTracker(branchFrom,branchTo);
+        repository.addMerge(test1);
+        assertThat(repository.getMerges(), contains(test1));
+        final BranchMergeTracker test2 = new BranchMergeTracker(branchFrom,branchTo);
+        repository.addMerge(test2);
+        assertThat(repository.getMerges(), contains(test1, test2));
+        repository.removeMerge(test1);
+        assertThat(repository.getMerges(), contains(test2));
 
     }
 
