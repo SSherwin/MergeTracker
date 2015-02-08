@@ -13,6 +13,15 @@ public class Repository {
     private List<Branch>branches;
     private List<BranchMergeTracker> merges;
     private List<Revision>revisions;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public List<Branch> getBranches() {
         return branches;
