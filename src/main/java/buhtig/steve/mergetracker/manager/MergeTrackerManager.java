@@ -1,5 +1,7 @@
 package buhtig.steve.mergetracker.manager;
 
+import buhtig.steve.mergetracker.model.Branch;
+import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.MergeTracker;
 import buhtig.steve.mergetracker.model.Repository;
 import buhtig.steve.mergetracker.providers.ApplicationConfigurationProvider;
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
@@ -30,6 +34,11 @@ public class MergeTrackerManager {
         this.repositories = new TreeMap<>();
     }
 
+    @PostConstruct
+    public void initialise() {
+        refresh();
+    }
+
     public Repository getRepository(final String name) {
         return this.repositories.get(name);
     }
@@ -40,8 +49,49 @@ public class MergeTrackerManager {
             if (getRepository(app) == null) {
                 createRepository(app);
             }
+            refreshRepository(getRepository(app));
+
         }
     }
+
+    private void refreshRepository(Repository repository) {
+       List<String>merges = configurationProvider.getMergeList(repository.getName());
+       //Split
+
+        List<Branch> branchesToRemove = new ArrayList(repository.getBranches());
+        List<BranchMergeTracker> mergesToRemove = new ArrayList(repository.getMerges());
+
+        for (String merge : merges) {
+            String[] array = merge.split("\\|");
+            Branch branchFrom = getBranch(repository, array[0]);
+            Branch branchTo = getBranch(repository, array[1]);
+
+            branchesToRemove.remove(branchFrom);
+            branchesToRemove.remove(branchTo);
+
+            BranchMergeTracker tracker = new BranchMergeTracker(branchTo,branchFrom);
+            repository.addMerge(tracker);
+            mergesToRemove.remove(tracker);
+        }
+
+        for(Branch remove : branchesToRemove) {
+            repository.removeBranch(remove);
+        }
+        for(BranchMergeTracker remove : mergesToRemove) {
+            repository.removeMerge(remove);
+        }
+
+    }
+
+    private Branch getBranch(Repository repository, String s) {
+        Branch branch = repository.getBranch(s);
+        if (null == branch) {
+            branch = new Branch(s);
+            repository.addBranch(branch);
+        }
+        return branch;
+    }
+
 
     private void createRepository(final String app) {
         final Repository repository = new Repository();
