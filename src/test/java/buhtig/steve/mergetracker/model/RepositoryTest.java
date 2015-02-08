@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
@@ -43,5 +44,15 @@ public class RepositoryTest {
         assertSame(repository.getRevisions(), testRevs);
 
     }
+
+
+    @Test
+    public void testGetName() throws Exception {
+        assertThat(repository.getName(), nullValue());
+        repository.setName("Test1");
+        assertThat(repository.getName(), equalTo("Test1"));
+
+    }
+
 
 }
