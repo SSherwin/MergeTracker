@@ -80,9 +80,9 @@ public class ApplicationConfigurationProvider {
         return newList;
     }
 
-    public Object getType(final String application) {
+    public String getType(final String application) {
         refreshIfRequired();
-        return applicationConfig.get(application).getProperty(TYPE);
+        return (String) applicationConfig.get(application).getProperty(TYPE);
     }
 
 
