@@ -1,5 +1,7 @@
 package buhtig.steve.mergetracker.model;
 
+import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,5 +56,12 @@ public class RepositoryTest {
 
     }
 
+    @Test
+    public void testGetSetProvider() {
+        assertThat(repository.getProvider(), nullValue());
 
+        IMergeTrackerDataProvider mockProv = EasyMock.createMock("mockProvider", IMergeTrackerDataProvider.class);
+        repository.setProvider(mockProv);
+        assertSame(repository.getProvider(), mockProv);
+    }
 }

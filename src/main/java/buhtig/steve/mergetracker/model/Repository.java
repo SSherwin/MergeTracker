@@ -15,6 +15,16 @@ public class Repository {
     private List<Revision>revisions;
     private String name;
 
+    public IMergeTrackerDataProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(IMergeTrackerDataProvider provider) {
+        this.provider = provider;
+    }
+
+    private IMergeTrackerDataProvider provider;
+
     public String getName() {
         return name;
     }
