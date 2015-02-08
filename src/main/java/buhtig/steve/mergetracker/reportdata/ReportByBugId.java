@@ -41,16 +41,21 @@ public class ReportByBugId extends AbstractReport {
             final List<Revision> revisionsInRange = tracker.getMergeFrom().getRevisions();
             for (Revision revToReport : revisionsInRange) {
                 if (firstRevision <= revToReport.getRevision() && lastRevision >= revToReport.getRevision()) {
-                    List<MergeRevision> bugRevList = dataMap.get(revToReport.getBugTrackId());
+                    long bugId = getBugTrackId(revToReport);
+                    List<MergeRevision> bugRevList = dataMap.get(bugId);
                     if (null == bugRevList) {
                         bugRevList = new ArrayList<>();
-                        dataMap.put(revToReport.getBugTrackId(), bugRevList);
+                        dataMap.put(bugId, bugRevList);
                     }
                     bugRevList.add(new MergeRevision(revToReport,
                             revisionsToMerge.contains(revToReport)));
                 }
             }
         }
+    }
+
+    private Long getBugTrackId(Revision revToReport) {
+        return (null == revToReport.getBugTrackId() ? -1 : revToReport.getBugTrackId());
     }
 
 

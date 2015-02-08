@@ -25,7 +25,7 @@ public class BranchMergeTracker {
      * @param mergeFrom location where getting revisions from
      */
     public BranchMergeTracker(Branch branch, Branch mergeFrom) {
-        this.id = idCounter++;
+        this.id = ++idCounter;
         this.branch = branch;
         this.mergeFrom = mergeFrom;
         revisionsToMerge = new TreeMap<>();
@@ -57,6 +57,10 @@ public class BranchMergeTracker {
 
     public long getId() {
         return id;
+    }
+
+    public void clearRevisionsToMerge() {
+        this.revisionsToMerge.clear();
     }
 
 }
