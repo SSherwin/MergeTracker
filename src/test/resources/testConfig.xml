@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+<applications>
+   <application>
+      <name>Test1</name>
+      <reposType>subversion</reposType>
+      <url>http://localhost:8080/repos/Test1</url>
+      <merges>
+          <merge>A|B</merge>
+          <merge>A|C</merge>
+          <merge>A|D</merge>
+          <merge>D|A</merge>
+      </merges>
+    </application>  
+    <application>
+      <name>Test2</name>
+      <reposType>test</reposType>
+      <merges>
+          <merge>A|B</merge>
+      </merges>
+    </application>
+    <application>
+        <name>Test3</name>
+        <reposType>subversion</reposType>
+        <url>http://localhost:8080/repos/Test3</url>
+    </application>
+</applications>
+</config>

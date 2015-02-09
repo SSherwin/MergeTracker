@@ -63,4 +63,15 @@ public class BranchMergeTracker {
         this.revisionsToMerge.clear();
     }
 
+
+    public boolean equals(Object obj) {
+        if (obj != null) {
+            BranchMergeTracker mergeTracker = (BranchMergeTracker)obj;
+            return  branch.equals(mergeTracker.getBranch()) &&
+                    mergeFrom.equals(mergeTracker.getMergeFrom());
+        }
+        return false;
+
+    }
+
 }

@@ -12,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertTrue;
 
 public class BranchMergeTrackerTest {
 
@@ -85,5 +86,15 @@ public class BranchMergeTrackerTest {
         tracker.clearRevisionsToMerge();
         assertThat("Revisions added to merge from list", tracker.getRevisionsToMerge(), hasSize(0));
         verify(mergeFrom);
+    }
+
+    @Test
+    public void testEquals() throws Exception {
+        replay(mergeFrom);
+        replay(branch);
+
+        assertTrue("Equals derived", tracker.equals(new BranchMergeTracker(branch, mergeFrom)));
+        verify(mergeFrom);
+        verify(branch);
     }
 }

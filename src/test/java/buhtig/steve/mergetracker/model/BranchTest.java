@@ -5,8 +5,10 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertTrue;
 
 public class BranchTest {
 
@@ -77,6 +79,14 @@ public class BranchTest {
     public void getRevisionReturningNull() {
         assertThat("we can get revision 21", branch.getRevision(21L), nullValue());
     }
+
+    @Test
+    public void testIsTrunk() {
+        assertFalse("trunk test false", branch.isTrunk());
+        final Branch trunk = new Branch(Branch.TRUNK);
+        assertTrue("trunk test true", trunk.isTrunk());
+    }
+
 
     private void addRevisions() {
         branch.addRevision(revision123);
