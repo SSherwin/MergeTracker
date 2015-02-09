@@ -58,9 +58,9 @@ public class ApplicationConfigurationProvider {
     }
 
 
-    public Object getUrl(final String application) {
+    public String getUrl(final String application) {
         refreshIfRequired();
-        return applicationConfig.get(application).getProperty(URL);
+        return (String)applicationConfig.get(application).getProperty(URL);
     }
 
 
