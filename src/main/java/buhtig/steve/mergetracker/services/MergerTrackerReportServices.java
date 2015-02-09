@@ -3,15 +3,12 @@ package buhtig.steve.mergetracker.services;
 import buhtig.steve.mergetracker.manager.MergeTrackerManager;
 import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.Repository;
-import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
-import buhtig.steve.mergetracker.providers.MergeTrackerDataProviderFactory;
 import buhtig.steve.mergetracker.reportdata.ReportByBugId;
 import buhtig.steve.mergetracker.reportdata.ReportByRevision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.TreeMap;
 

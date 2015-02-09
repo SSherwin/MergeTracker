@@ -2,11 +2,8 @@ package buhtig.steve.mergetracker.services;
 
 import buhtig.steve.mergetracker.manager.MergeTrackerManager;
 import buhtig.steve.mergetracker.model.Branch;
-import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.Repository;
-import buhtig.steve.mergetracker.model.Revision;
 import buhtig.steve.mergetracker.providers.IMergeTrackerDataProvider;
-import buhtig.steve.mergetracker.providers.MergeTrackerDataProviderFactory;
 import org.easymock.EasyMock;
 import org.junit.Test;
 

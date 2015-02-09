@@ -48,7 +48,9 @@ public class MergeTrackerManagerTest extends TestCase {
         list.add(APPLICATION_2);
         expect(mockConfig.getApplicationList()).andReturn(list);
         expect(mockConfig.getType(APPLICATION_1)).andReturn("subversion");
+        expect(mockConfig.getUrl(APPLICATION_1)).andReturn("Http://localhost/repos/Application1/").anyTimes();
         expect(mockConfig.getType(APPLICATION_2)).andReturn("testdata");
+        expect(mockConfig.getUrl(APPLICATION_2)).andReturn("Http://localhost/repos/Application2/").anyTimes();
 
         List<String> mergeList1 = new ArrayList<>();
         mergeList1.add("branch/REL-1.0|branch/REL-2.0");
@@ -82,7 +84,9 @@ public class MergeTrackerManagerTest extends TestCase {
         list.add(APPLICATION_2);
         expect(mockConfig.getApplicationList()).andReturn(list).times(2);
         expect(mockConfig.getType(APPLICATION_1)).andReturn("subversion");
+        expect(mockConfig.getUrl(APPLICATION_1)).andReturn("Http://localhost/repos/Application1/").anyTimes();
         expect(mockConfig.getType(APPLICATION_2)).andReturn("testdata");
+        expect(mockConfig.getUrl(APPLICATION_2)).andReturn("Http://localhost/repos/Application2/").anyTimes();
 
         List<String> mergeList1 = new ArrayList<>();
         mergeList1.add("branch/REL-1.0|branch/REL-2.0");

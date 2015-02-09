@@ -2,11 +2,8 @@ package buhtig.steve.mergetracker.services;
 
 import buhtig.steve.mergetracker.manager.MergeTrackerManager;
 import buhtig.steve.mergetracker.model.Branch;
-import buhtig.steve.mergetracker.model.BranchMergeTracker;
 import buhtig.steve.mergetracker.model.Repository;
 import buhtig.steve.mergetracker.model.Revision;
-import buhtig.steve.mergetracker.providers.MergeTrackerDataProviderFactory;
-import buhtig.steve.mergetracker.reportdata.ReportByRevision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

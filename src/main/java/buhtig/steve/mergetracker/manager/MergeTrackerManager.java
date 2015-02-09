@@ -8,6 +8,8 @@ import buhtig.steve.mergetracker.providers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +22,7 @@ import java.util.TreeMap;
  * Created by steve on 03/02/15.
  */
 @Component
+@EnableScheduling
 public class MergeTrackerManager {
 
     private ApplicationConfigurationProvider configurationProvider;
@@ -42,9 +45,12 @@ public class MergeTrackerManager {
     }
 
     public Repository getRepository(final String name) {
-        return this.repositories.get(name);
+        Repository result = this.repositories.get(name);
+        return result;
     }
 
+
+    @Scheduled(fixedDelayString = "${application.schedule.fixedDelay}", initialDelayString = "${application.schedule.initialDelay}")
     public void refresh() {
         List<String> apps = configurationProvider.getApplicationList();
         for (String  app : apps) {
@@ -104,6 +110,7 @@ public class MergeTrackerManager {
         final Repository repository = new Repository();
         repository.setName(app);
         repository.setProvider(getProvider(app));
+        repository.setUrl(configurationProvider.getUrl(app));
         this.repositories.put(repository.getName(), repository);
     }
 
@@ -128,7 +135,7 @@ public class MergeTrackerManager {
     @Bean
     @Scope("prototype")
     private IMergeTrackerDataProvider getSubversionProvider() {
-        return new SubversionProvider();
+        return new SubversionProvider(parser);
     }
 
     public Collection<Repository> getRepositories() {

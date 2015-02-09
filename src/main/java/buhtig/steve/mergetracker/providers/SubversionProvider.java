@@ -31,11 +31,15 @@ import java.util.*;
 @Component
 public class SubversionProvider implements IMergeTrackerDataProvider {
     private Logger log = Logger.getLogger(SubversionProvider.class);
+    final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-    @Autowired
     private IMessageParser parser;
 
-    final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    @Autowired
+    public SubversionProvider(IMessageParser parser) {
+        this.parser = parser;
+    }
+
 
     @Override
     public void refresh(Repository repository) {
@@ -58,20 +62,28 @@ public class SubversionProvider implements IMergeTrackerDataProvider {
      * @param trunkBranch true if this is the trunk branch
      */
     private void getSvnInfoForBranch(final Branch branch, final Repository repository, final boolean trunkBranch) {
-        final String url = repository.getUrl();
+        final String url = repository.getUrl() + branch.getBranchNameForUrl();
         try {
-            Long revStart = (trunkBranch ? 1L : repository.getLowestRevision() );
+            Long revStart = (trunkBranch ? repository.getLowestRevision() : 1L);
             if (null != branch.getLastRevision()) {
                 revStart = branch.getLastRevision().getRevision()+1;
             }
 
             final String range = "-r" + revStart + ":HEAD";
-            Process tr = Runtime.getRuntime().exec(new String[]{"svn", "log", "--xml", "--stop-on-copy", range, url + branch.getBranchName() });
+            Process tr = Runtime.getRuntime().exec(new String[]{"svn", "log", "--xml", "--stop-on-copy", range, url });
+
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(tr.getInputStream());
+            Document doc;
+            try {
+                doc = dBuilder.parse(tr.getInputStream());
+            } catch (Exception exp) {
+                log.error("svn log --xml --stop-on-copy " + range + " " + url + " exitValue=" + tr.exitValue());
+                log.error(exp.getMessage());
+                return;
+            }
 
             NodeList nList = doc.getElementsByTagName("logentry");
 
@@ -134,8 +146,8 @@ public class SubversionProvider implements IMergeTrackerDataProvider {
         try {
             // Run the SVN command....
             Process tr = Runtime.getRuntime().exec(new String[]{"svn", "mergeinfo", "--show-revs", "eligible",
-                    url + mergeTracker.getMergeFrom().getBranchName(),
-                    url + mergeTracker.getBranch().getBranchName()  });
+                    url + mergeTracker.getMergeFrom().getBranchNameForUrl(),
+                    url + mergeTracker.getBranch().getBranchNameForUrl()  });
 
             BufferedReader rd = new BufferedReader(new InputStreamReader(tr.getInputStream()));
             String line;
