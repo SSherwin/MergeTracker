@@ -71,6 +71,19 @@ public class Branch {
         return branchName;
     }
 
+
+    /**
+     * @return branch name
+     */
+    public String getBranchNameForUrl() {
+        if (!isTrunk()) {
+            return "branches/" + branchName;
+        }
+        else {
+            return branchName;
+        }
+    }
+
     /**
      * @param revision to get
      * @return revision object for given id.

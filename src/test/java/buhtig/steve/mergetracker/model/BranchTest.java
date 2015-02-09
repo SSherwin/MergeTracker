@@ -69,6 +69,12 @@ public class BranchTest {
         assertThat("Branch name set when constructed", branch.getBranchName(), equalTo("TestBranch"));
     }
 
+
+    @Test
+    public void testGetBranchNameForUrl() throws Exception {
+        assertThat("Branch name set when constructed", branch.getBranchNameForUrl(), equalTo("branches/TestBranch"));
+    }
+
     @Test
     public void getRevisionReturningAnswer() {
         addRevisions();
